@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <h2>Recommended Movies</h2>
+  {% if recommendations_dict %}
+
+  {% for obj in recommendations_dict %}
+    <h3>{{obj.movie}}</h3>
+    <h3>{{obj.clan_rating}}</h3>
+  {% endfor %}
+
+  {% else %}
+    {% for movie in recommendation %}
+    <h3>{{movie.title}}</h3>
+    <h3>{{movie.year}}</h3>
+    <h3>{{movie.rating}}</h3>
+    {% endfor %}
+  {% endif %} 
+{% endblock %}
