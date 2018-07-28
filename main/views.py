@@ -11,8 +11,8 @@ from django.contrib.auth import (
 from django.db.models import Q
 from .models import  *
 from copy import deepcopy
-from operator import attrgetter
-
+import operator 
+from  collections import *
 def index(request):
 
     request.session.set_expiry(1800) 
@@ -111,10 +111,72 @@ def create_party(request):
     return redirect('/list_parties')
 
 def party_detail(request, id=None):
+    if not request.user.is_authenticated :
+            return redirect("/login")
+    request.session.set_expiry(1800) 
     obj = get_object_or_404(Party, id=id)
+    members = obj.party_memberships.all().order_by('username')
+    rated_movies = []
+    for member in members:
+        rated_movies += list(RatingMovie.objects.filter(user=member))
+    #party_rating = {movie_instance : [number_of_users, summation of p_rating, global rating]}
+    party_rating = []
+    for obj1  in rated_movies:
+        if obj1.movie not in party_rating :
+            party_rating[obj1.movie] = [1] 
+            party_rating[obj1.movie].append(obj1.p_rating)
+            party_rating[obj1.movie].append(obj1.movie.rating)
+            for obj2 in rated_movies:
+                if obj1 != obj2 and obj1.movie == obj2.movie:
+                    party_rating[obj1.movie][0] += 1 
+                    party_rating[obj1.movie][1] += obj2.p_rating
+
+    for key, value in party_rating.items():
+        party_rating[key][0] = value[1] / value[0]
+        del party_rating[key][1]
+
+    sorted_party_rating = sorted(party_rating.items(), key=lambda x:x[1][0], reverse=True)
+    del party_rating
+    if len(sorted_party_rating) > 5:
+        sorted_party_rating = sorted_party_rating[:5]
+    
     title = 'Party Detail'
-    context = {'object':obj, 'title':title}
+    context = {'title':title, 'members':members, 'party_rating':sorted_party_rating}
     return render(request, 'party_detail.html', context)
+
+
+def reporting_page(request):
+    if not request.user.is_authenticated :
+            return redirect("/login")
+    request.session.set_expiry(1800) 
+    n_movies = Movie.objects.count()
+    n_users = User.objects.count()
+    n_ratings = RatingMovie.objects.count()
+    # total_ratings = sum([rating[0] for rating in Movie.objects.all().values_list('rating')])
+    ratings_per_movie = n_ratings / n_movies
+    ratings_per_user = n_ratings / n_users
+
+    user_number_of_ratings = {}
+    rated_movies = RatingMovie.objects.all().order_by('username')
+    for obj1  in rated_movies:
+        if obj1.user not in user_number_of_ratings :
+            user_number_of_ratings[obj1.user] = 1
+            for obj2 in rated_movies:
+                if obj1 != obj2 and obj1.user == obj2.user:
+                    user_number_of_ratings[obj1.user] += 1 
+
+
+    sorted_user_number_of_ratings = sorted(user_number_of_ratings.items(), key=lambda x:x[1], reverse=True)
+    del user_number_of_ratings
+    if len(sorted_user_number_of_ratings) > 10:
+        sorted_user_number_of_ratings = sorted_user_number_of_ratings[:10]
+
+
+    n_parties = Party.objects.count()
+    total_users_in_parties = sum(party.n_members for party in Party.objects.all())
+    users_per_party = total_users_in_parties / n_parties
+
+    
 
 def register_view(request):
     request.session.set_expiry(1800) 

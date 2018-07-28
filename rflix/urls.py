@@ -30,7 +30,7 @@ urlpatterns = [
     path('list_parties/', views.list_parties, name='list_parties'),
     path('<int:id>/', views.party_detail, name='party_detail'),
     path('create_party/', views.create_party, name='create_party'),
-
+    path('reporting_page/', views.reporting_page, name='reporting_page'),
 
 
 ]
