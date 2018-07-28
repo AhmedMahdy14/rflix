@@ -149,34 +149,71 @@ def reporting_page(request):
     if not request.user.is_authenticated :
             return redirect("/login")
     request.session.set_expiry(1800) 
+    # The total number of movies.
     n_movies = Movie.objects.count()
+    # The total number of registered users.
     n_users = User.objects.count()
+    # The total number of ratings.
     n_ratings = RatingMovie.objects.count()
     # total_ratings = sum([rating[0] for rating in Movie.objects.all().values_list('rating')])
+
+    # The average number of ratings per movie
     ratings_per_movie = n_ratings / n_movies
+    # The average number of ratings per user
     ratings_per_user = n_ratings / n_users
 
-    user_number_of_ratings = {}
-    rated_movies = RatingMovie.objects.all().order_by('username')
+    # The list of  top 10 users with the most number of ratings.
+    number_of_ratings_for_users = {}
+    rated_movies = RatingMovie.objects.all()
     for obj1  in rated_movies:
-        if obj1.user not in user_number_of_ratings :
-            user_number_of_ratings[obj1.user] = 1
+        if obj1.user not in number_of_ratings_for_users :
+            number_of_ratings_for_users[obj1.user] = 1
             for obj2 in rated_movies:
                 if obj1 != obj2 and obj1.user == obj2.user:
-                    user_number_of_ratings[obj1.user] += 1 
+                    number_of_ratings_for_users[obj1.user] += 1 
 
 
-    sorted_user_number_of_ratings = sorted(user_number_of_ratings.items(), key=lambda x:x[1], reverse=True)
-    del user_number_of_ratings
-    if len(sorted_user_number_of_ratings) > 10:
-        sorted_user_number_of_ratings = sorted_user_number_of_ratings[:10]
+    sorted_number_of_ratings_for_users = sorted(number_of_ratings_for_users.items(), key=lambda x:x[1], reverse=True)
+    del number_of_ratings_for_users
+    if len(sorted_number_of_ratings_for_users) > 10:
+        sorted_number_of_ratings_for_users = sorted_number_of_ratings_for_users[:10]
 
-
+    # The total number of parties.
     n_parties = Party.objects.count()
     total_users_in_parties = sum(party.n_members for party in Party.objects.all())
+    # The average number of users per party.
     users_per_party = total_users_in_parties / n_parties
 
-    
+
+    # The list of popular users the most number of party memberships.
+    number_of_memberships_in_parties_for_users = {}
+    parties = Party.objects.all()
+    for party  in parties:
+        for user in party.party_memberships.all():
+            if user not in number_of_memberships_in_parties_for_users :
+                number_of_memberships_in_parties_for_users[user] = 1
+            else:
+                number_of_memberships_in_parties_for_users[user] += 1
+
+
+    sorted_number_of_memberships_in_parties_for_users = sorted(number_of_memberships_in_parties_for_users.items(), key=lambda x:x[1], reverse=True)
+    del number_of_memberships_in_parties_for_users
+    if len(sorted_number_of_memberships_in_parties_for_users) > 10:
+        sorted_number_of_memberships_in_parties_for_users = sorted_number_of_memberships_in_parties_for_users[:10]
+
+    context = {
+        "n_movies": n_movies,
+        "n_users": n_users,
+        "n_ratings": n_ratings,
+        "ratings_per_movie": ratings_per_movie,
+        "ratings_per_user": ratings_per_user,
+        "sorted_number_of_ratings_for_users": sorted_number_of_ratings_for_users,
+        "n_parties": n_parties,
+        "users_per_party": users_per_party,
+        "sorted_number_of_memberships_in_parties_for_users": sorted_number_of_memberships_in_parties_for_users
+    }
+    return render(request, "reporting_page.html", context)
+
 
 def register_view(request):
     request.session.set_expiry(1800) 
