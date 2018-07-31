@@ -28,9 +28,12 @@ urlpatterns = [
     path('profile_page/', views.profile_page_view, name='profile_page'),
     path('personalized_recommendation_page/', views.personalized_recommendation_page, name='personalized_recommendation_page'),
     path('list_parties/', views.list_parties, name='list_parties'),
-    path('<int:id>/', views.party_detail, name='party_detail'),
+    path('party_detail/<int:id>/', views.party_detail, name='party_detail'),
     path('create_party/', views.create_party, name='create_party'),
     path('reporting_page/', views.reporting_page, name='reporting_page'),
+    path('leave_party/', views.leave_party, name='leave_party'),
+    path('join_party/', views.join_party, name='join_party'),
+    path('delete_rating/<int:movie_id>/', views.delete_rating, name='delete_rating'),
 
 
 ]

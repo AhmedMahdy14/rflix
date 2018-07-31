@@ -6,33 +6,41 @@
 
 
 <form method='GET' action='/create_party/' enctype='multipart/form-data'>{% csrf_token %}
-  <input  type='submit' class='btn btn-default' />
+  <input  type='submit' class='btn btn-default' value="Create Party" />
   </form>
+
 
   <h2>Joined Parties</h2>
   {% if joined %}
-
   {% for obj in joined %}
     <h3>{{obj}}</h3>
     <a href={% url 'party_detail' id=obj.id %}>Detail </a><br/>
-
+    <form action="/leave_party/" method="POST"> {% csrf_token %}
+      <input type="hidden" value="{{ obj.id }}" name="id">
+      <input type="submit" value="Leave" >
+    </form>
   {% endfor %}
   {% else %}
-
   <p>None</p>
   {% endif %}
 
+
+
+
   <h2>Unjoined Parties</h2>
   {% if unjoined %}
-
   {% for obj in unjoined %}
     <h3>{{obj}}</h3>
     <a href={% url 'party_detail' id=obj.id %}>Detail </a><br/>
-  
+      {% if obj.n_members <  3 %}
+      <form action="/join_party/" method="POST">{% csrf_token %}
+        <input type="hidden" value={{ obj.id }} name="id">
+      <input type="submit" value="join">
+    </form>
+    {% endif %} 
   {% endfor %}
   {% else %}
-
   <p>None</p>
-  
   {% endif %} 
+
 {% endblock %}

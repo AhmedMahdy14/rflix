@@ -2,8 +2,14 @@
 
 {% block content %}
 
-  <h2>title</h2>
-      <p>{{ username }}</p>
+  <h2>{{title}}</h2>
+      <p>Username:</p>
+      <p>{{ username }} </p>
+      <p>Email: </p>
+      {% if email %}
+      
       <p>{{ email }}</p>
-
+    {% else %}
+      <p>None</p>
+  {% endif %}
 {% endblock %}

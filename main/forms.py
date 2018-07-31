@@ -22,12 +22,12 @@ class UserRegisterForm(forms.ModelForm):
             'password'
         ]
 
-    def clean_username(self):
-        user_name = self.cleaned_data.get('username')
-        username_qs = User.objects.filter(username=user_name)
-        if username_qs.exists():
-            raise forms.ValidationError("This username has already been registered")
-        return user_name
+    # def clean_username(self):
+    #     user_name = self.cleaned_data.get('username')
+    #     username_qs = User.objects.filter(username=user_name)
+    #     if username_qs.exists():
+    #         raise forms.ValidationError("This username has already been registered")
+    #     return user_name
 
 
 class UserLoginForm(forms.Form):
@@ -60,4 +60,5 @@ class PersonalizedRating(forms.ModelForm):
     def clean(self, *args, **kwargs):
         p_rating = self.cleaned_data.get("p_rating")
         if not (p_rating >= 1 and p_rating <= 5):
+            # raise forms.ValidationError("This is unallowed number")
             return super(PersonalizedRating, self).clean(*args, **kwargs)
