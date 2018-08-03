@@ -15,10 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import url, include
+
 
 from main import views
-
+# from main.api import urls as api_url
 urlpatterns = [
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('movies/', views.movies, name='movies'),
@@ -34,7 +37,7 @@ urlpatterns = [
     path('leave_party/', views.leave_party, name='leave_party'),
     path('join_party/', views.join_party, name='join_party'),
     path('delete_rating/<int:movie_id>/', views.delete_rating, name='delete_rating'),
-
+    url(r'^api/', include('main.api.urls')),    
 
 ]
 
