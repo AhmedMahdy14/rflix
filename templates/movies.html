@@ -2,6 +2,11 @@
 
 {% block content %}
 
+<form action='http://www.google.com/search'  method="GET">
+<input type='text' name='q' placeholder="your search"/>
+<input type="submit" value="save"/>
+</form>
+
   <h2>Rated Movies</h2>
 
   {% if rated_movies %}

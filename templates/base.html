@@ -1,8 +1,16 @@
+{% comment %} the most important thing in django templates that you can include html code from other
+file to avoid redunduncy, amother benefit is template inheritance, also
+you can render a qs from view to template via context and show db records as 
+you want {% endcomment %}
+
+{% comment %} block, for, if, comment  .... are called template tag
+also you can use template filter in side {{ 4|add:"2" }} >> 6 as add or anything {% endcomment %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>{% block title %}R-flix{% endblock %}</title>
+    <title>{% block title %}rflix{% endblock %}</title>
   </head>
   <body>
     <header>

@@ -8,6 +8,10 @@ from django.contrib.auth import (
     login,
     logout,
 )
+
+# from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+
 # from django.db.models import Q
 from .models import *
 from copy import deepcopy
@@ -21,7 +25,7 @@ def index(request):
     request.session.set_expiry(1800)
     return render(request, 'index.html')
 
-
+# you can actually save data using get request but it is unsave method to do that
 def movies(request):
     if not request.user.is_authenticated:
         return redirect("/login")
@@ -143,7 +147,12 @@ def list_parties(request):
     all_parties = set(Party.objects.all())
     joined_parties = set(Party.objects.filter(party_memberships=user))
     unjoined_parties = all_parties - joined_parties
-    context = {'joined': joined_parties, 'unjoined': unjoined_parties}
+    context = {
+        'joined': joined_parties, 
+        'unjoined': unjoined_parties,
+        'title':'list of parties',
+        'my_html':'<h1>hello world</h1>',
+        }
     return render(request, 'list_parties.html', context)
 
 
@@ -235,33 +244,36 @@ def reporting_page(request):
     # total_ratings = sum([rating[0] for rating in Movie.objects.all().values_list('rating')])
 
     # The average number of ratings per movie
-    # ratings_per_movie = n_ratings / n_movies
-    ratings_per_movie = Movie.objects.all().aggregate(Avg('nratings'))['nratings__avg']
+    ratings_per_movie = n_ratings / n_movies
+    # ratings_per_movie = Movie.objects.all().aggregate(Avg('nratings'))['nratings__avg']
 
     # The average number of ratings per user
     ratings_per_user = n_ratings / n_users
 
     # The list of  top 10 users with the most number of ratings.
     
-    # number_of_ratings_for_users = {}
-    # rated_movies = RatingMovie.objects.all()
-    # for obj1  in rated_movies:
-    #     if obj1.user not in number_of_ratings_for_users :
-    #         number_of_ratings_for_users[obj1.user] = 1
-    #         # for obj2 in rated_movies:
+    number_of_ratings_for_users = {}
+    rated_movies = RatingMovie.objects.all()
+    for obj1  in rated_movies:
+        if obj1.user not in number_of_ratings_for_users :
+            number_of_ratings_for_users[obj1.user] = 1
+            # for obj2 in rated_movies:
 
-    #     else:
-    #         number_of_ratings_for_users[obj1.user] += 1
+        else:
+            number_of_ratings_for_users[obj1.user] += 1
 
-    # sorted_number_of_ratings_for_users = sorted(number_of_ratings_for_users.items(), key=lambda x:x[1], reverse=True)
-    # del number_of_ratings_for_users
-    # if len(sorted_number_of_ratings_for_users) > 10:
-    #     sorted_number_of_ratings_for_users = sorted_number_of_ratings_for_users[:10]
+    sorted_number_of_ratings_for_users = sorted(number_of_ratings_for_users.items(), key=lambda x:x[1], reverse=True)
+    del number_of_ratings_for_users
+    if len(sorted_number_of_ratings_for_users) > 10:
+        sorted_number_of_ratings_for_users = sorted_number_of_ratings_for_users[:10]
 
-    # The idea in sql is that, to GROUP BY User in RatingMovie Model and then count each group and 
-    # take the top 10 users with top counts.
-    sorted_number_of_ratings_for_users = RatingMovie.objects.values('user')\
-        .annotate(dcount=Count('user')).order_by('-dcount')[:10]
+
+
+    # # The idea in sql is that, to GROUP BY User in RatingMovie Model and then count each group and 
+    # # take the top 10 users with top counts.
+    # sorted_number_of_ratings_for_users = RatingMovie.objects.values('user')\
+    #     .annotate(dcount=Count('user')).order_by('-dcount')[:10]
+
 
     # The total number of parties.
     n_parties = Party.objects.count()
@@ -309,8 +321,15 @@ def register_view(request):
         # get actual password from the form
         password = form.cleaned_data.get('password')
         user.set_password(password)
-        user.is_staff = True
+
+        # username = form.cleaned_data.get('username')
+        # password = form.cleaned_data.get('password')
+        # email = form.cleaned_data.get('email')
+        # user = User.objects.create_user(username, password=password, email=email)
+
         user.save()
+        # or 
+        # User.objects.create(**form.cleaned_data)
         new_user = authenticate(username=user.username, password=password)
         login(request, new_user)
         return redirect("/")

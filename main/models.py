@@ -20,15 +20,14 @@ class Movie(models.Model):
 
     class Meta:
         ordering = ('title',)
-
-
+        
 
 
 class RatingMovie(models.Model):
     movie      = models.ForeignKey(Movie, on_delete=models.CASCADE)
     user       = models.ForeignKey(User, on_delete=models.CASCADE)
     #personalized rating
-    p_rating   = models.IntegerField( validators=[MinValueValidator(0), MaxValueValidator(5)],
+    p_rating   = models.FloatField( validators=[MinValueValidator(0), MaxValueValidator(5)],
                                         default=0)
                                         
     def __str__(self):

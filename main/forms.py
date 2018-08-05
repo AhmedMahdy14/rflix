@@ -50,7 +50,7 @@ class UserLoginForm(forms.Form):
 
 class PersonalizedRating(forms.ModelForm):
     # RatingMovie.objects.filter(user = request.user.pk)[0].p_rating
-    p_rating = forms.FloatField()
+    # p_rating = forms.FloatField()
     class Meta:
         model = RatingMovie
         fields = [

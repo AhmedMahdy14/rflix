@@ -92,24 +92,24 @@ class MovieListAPIView(ListAPIView):
     serializer_class = MovieSerializer
     pagination_class = PostPageNumberPagination#PostOffsetLimitPagination
     permission_classes = [IsAuthenticated]
-    ordering = ('title')
+    ordering = ('rated_by')
+    queryset = Movie.objects.all()
+    # def get_queryset(self, *args, **kwargs): 
+    #     queryset_list = RatingMovie.objects.all()
+    #     query = self.request.GET.get('type')
+    #     try:
+    #         query = self.request.GET['type']
+    #         queryset_list = {rating_obj.movie for rating_obj in RatingMovie.objects.filter(user=self.request.user.pk)}
+    #         if query == 'rated':
+    #             pass
+    #         elif query == 'unrated':
+    #             queryset_list = set(Movie.objects.all()) - queryset_list
+    #         else:
+    #             raise ValueError('You have to set either rated or unrated in the query.')
+    #     except Exception as e:
+    #         raise e
 
-    def get_queryset(self, *args, **kwargs): 
-        queryset_list = RatingMovie.objects.all()
-        query = self.request.GET.get('type')
-        try:
-            query = self.request.GET['type']
-            queryset_list = {rating_obj.movie for rating_obj in RatingMovie.objects.filter(user=self.request.user.pk)}
-            if query == 'rated':
-                pass
-            elif query == 'unrated':
-                queryset_list = set(Movie.objects.all()) - queryset_list
-            else:
-                raise ValueError('You have to set either rated or unrated in the query.')
-        except Exception as e:
-            raise e
-
-        return list(queryset_list)    
+    #     return list(queryset_list)    
 
 
 

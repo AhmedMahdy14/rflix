@@ -24,13 +24,13 @@ class PartySerializer(serializers.ModelSerializer):
 
 class RatingMoviesSerializer(serializers.ModelSerializer):
     # party_memberships = PartyMembershipsSerializer(read_only=True, many=True)
-    def get_user(self, obj):
-        # obj is model instance
-        return obj.user.username
+    # def get_user(self, obj):
+    #     # obj is model instance
+    #     return obj.user.username
 
     class Meta:
         model = RatingMovie
-        fields = ('user', 'movie', 'p_rating',)
+        fields = ( 'user',)
 
 
 class MovieSerializer(serializers.ModelSerializer):
@@ -39,4 +39,4 @@ class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
         fields = ( 'title', 'year', 'rating', 'nratings', 'rated_by')
-        order_by = ('title', )
+        # order_by = ('title', )
