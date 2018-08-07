@@ -40,9 +40,10 @@ class RatingMovie(models.Model):
 
 
 class Party(models.Model):
-    n_members = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)],
-                                    default=0)
+    n_members = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)], default=0)
+    name = models.CharField(max_length=150, null=True, blank=True)
     party_memberships = models.ManyToManyField(User)
+    
     # party_memberships = models.ManyToManyField(User, through='PartyMemberships')
 
     def __str__(self):

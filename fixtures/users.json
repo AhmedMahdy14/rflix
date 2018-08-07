@@ -1,0 +1,20 @@
+[
+    {
+        "model": "main.user",
+        "pk": 7,
+        "fields": {
+            "username": "user7",
+            "password":"password",
+            "email": "user7@fg.com"
+        }
+    },
+    {
+        "model": "main.user",
+        "pk": 8,
+        "fields": {
+            "username": "user8",
+            "password":"password",
+            "email": "user8@fg.com"
+        }
+    }
+]

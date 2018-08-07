@@ -90,9 +90,11 @@ def personalized_recommendation_page(request):
         return redirect("/login")
     request.session.set_expiry(1800)
     user = request.user
+    # grab all rated movies by this user to exclude it from recommended movies
     rated_movies_qs = RatingMovie.objects.filter(user=user)
     unrecommended_movies = {
         rated_movie.movie for rated_movie in rated_movies_qs}
+    # override rated_movies_qs to get only movies which have high rate.
     rated_movies_qs = rated_movies_qs.filter(p_rating__range=(3, 5))
     user_clan = []
     recommendations = []
