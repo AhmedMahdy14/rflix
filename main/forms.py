@@ -48,14 +48,13 @@ class UserLoginForm(forms.Form):
                 raise forms.ValidationError("This user is not longer active.")
         return super(UserLoginForm, self).clean(*args, **kwargs)
 
+
 class PersonalizedRating(forms.ModelForm):
     # RatingMovie.objects.filter(user = request.user.pk)[0].p_rating
     # p_rating = forms.FloatField()
     class Meta:
         model = RatingMovie
-        fields = [
-        'p_rating'
-        ]
+        fields = ['p_rating' ]
 
     def clean(self, *args, **kwargs):
         p_rating = self.cleaned_data.get("p_rating")

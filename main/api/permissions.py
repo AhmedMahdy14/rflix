@@ -16,8 +16,6 @@ class IsOwner(permissions.BasePermission):
         # Write permissions are only allowed to the owner of the snippet.
         return obj.id == request.user.id
 
-
-
 class IsOwnerorAdmin(permissions.BasePermission):
     """
     Custom permission to only allow owners of an object to view it.
@@ -32,8 +30,6 @@ class IsOwnerorAdmin(permissions.BasePermission):
         # Write permissions are only allowed to the owner of the snippet.
         user_id = request.user.id
         return obj.id == user_id or User.objects.get(id=user_id).is_superuser
-
-
 
 
 class IsPartyOwnerorAdmin(permissions.BasePermission):
@@ -53,7 +49,6 @@ class IsPartyOwnerorAdmin(permissions.BasePermission):
         if obj.party_memberships.count():
             party_owner = obj.party_memberships.first().id
         return User.objects.get(id=user_id).is_superuser or party_owner == user_id 
-
 
 
 class IsMovieRaterOwner(permissions.BasePermission):

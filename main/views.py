@@ -8,22 +8,18 @@ from django.contrib.auth import (
     login,
     logout,
 )
-
-# from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
-
-# from django.db.models import Q
 from .models import *
 from copy import deepcopy
-# import operator
 from collections import *
 from django.db.models import *
+
 
 def index(request):
     if not request.user.is_authenticated:
         return redirect("/login")
     request.session.set_expiry(1800)
     return render(request, 'index.html')
+
 
 # you can actually save data using get request but it is unsave method to do that
 def movies(request):
@@ -67,6 +63,7 @@ def movies(request):
         'form': form
     }
     return render(request, 'movies.html', context)
+
 
 def delete_rating(request, movie_id=None):
     if not request.user.is_authenticated:
