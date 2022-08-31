@@ -8,13 +8,8 @@ class IsOwner(permissions.BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        # # Read permissions are allowed to any request,
-        # # so we'll always allow GET, HEAD or OPTIONS requests.
-        # if request.method in permissions.SAFE_METHODS:
-        #     return True
-
-        # Write permissions are only allowed to the owner of the snippet.
         return obj.id == request.user.id
+
 
 class IsOwnerorAdmin(permissions.BasePermission):
     """
@@ -22,12 +17,6 @@ class IsOwnerorAdmin(permissions.BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        # # Read permissions are allowed to any request,
-        # # so we'll always allow GET, HEAD or OPTIONS requests.
-        # if request.method in permissions.SAFE_METHODS:
-        #     return True
-
-        # Write permissions are only allowed to the owner of the snippet.
         user_id = request.user.id
         return obj.id == user_id or User.objects.get(id=user_id).is_superuser
 
@@ -38,12 +27,6 @@ class IsPartyOwnerorAdmin(permissions.BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        # # Read permissions are allowed to any request,
-        # # so we'll always allow GET, HEAD or OPTIONS requests.
-        # if request.method in permissions.SAFE_METHODS:
-        #     return True
-
-        # Write permissions are only allowed to the owner of the snippet.
         user_id = request.user.id
         party_owner = None
         if obj.party_memberships.count():
@@ -57,16 +40,8 @@ class IsMovieRaterOwner(permissions.BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        # # Read permissions are allowed to any request,
-        # # so we'll always allow GET, HEAD or OPTIONS requests.
-        # if request.method in permissions.SAFE_METHODS:
-        #     return True
+        user_id = request.user.id
+        rm_obj = RatingMovie.objects.get(movie=obj, user=request.user)
+        return rm_obj.user.id == user_id
 
-        # Write permissions are only allowed to the owner of the snippet.
-        print(obj)
-        try:
-            rm_obj = RatingMovie.objects.get(movie=obj, user=request.user)
-            return True
-        except DoesNotExist:
-            return False
 

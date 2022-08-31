@@ -1,36 +1,23 @@
 {% extends 'base.html' %}
-
 {% block content %}
+    <h2>{{ title }}</h2>
+    <h2>Members</h2>
+    {% if members %}
+        {% for member in members %}
+            <h3>{{ member.username }}</h3>
+        {% endfor %}
+    {% else %}
+        <p>None</p>
+    {% endif %}
+    <h2>Recommendations</h2>
+    {% if party_rating %}
 
-  <h2>{{title}}</h2>
-
-  <h2>Members</h2>
-  {% if members %}
-
-  {% for member in members %}
-    <h3>{{member.username}}</h3>
-    
-
-  {% endfor %}
-  {% else %}
-
-  <p>None</p>
-  {% endif %}
-
-  
-
-  <h2>Recommendations</h2>
-  {% if party_rating %}
-
-  {% for movie, rating in party_rating %}
-    <h3>{{movie.title}}</h3>
-  <h4>Party Rating {{rating.0}}</h4>
-    <h4>Global Rating{{rating.1}}</h4> 
-
-  {% endfor %}
-  {% else %}
-
-  <p>None</p>
-  {% endif %}
-
+        {% for movie, rating in party_rating %}
+            <h3>{{ movie.title }}</h3>
+            <h4>Party Rating {{ rating.0 }}</h4>
+            <h4>Global Rating{{ rating.1 }}</h4>
+        {% endfor %}
+    {% else %}
+        <p>None</p>
+    {% endif %}
 {% endblock %}

@@ -1,15 +1,12 @@
 {% extends 'base.html' %}
-
 {% block content %}
-
-  <h2>{{title}}</h2>
-      <p>Username:</p>
-      <p>{{ username }} </p>
-      <p>Email: </p>
-      {% if email %}
-      
-      <p>{{ email }}</p>
+    <h2>{{ title }}</h2>
+    <p>Username:</p>
+    <p>{{ username }} </p>
+    <p>Email: </p>
+    {% if email %}
+        <p>{{ email }}</p>
     {% else %}
-      <p>None</p>
-  {% endif %}
+        <p>None</p>
+    {% endif %}
 {% endblock %}

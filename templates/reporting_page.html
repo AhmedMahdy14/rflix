@@ -1,58 +1,42 @@
 {% extends 'base.html' %}
-
 {% block content %}
+    <h2>The total number of movies</h2>
+    <h3>{{ n_movies }}</h3>
+    <h2>The total number of registered users</h2>
+    <h3>{{ n_users }}</h3>
+    <h2>The total number of ratings</h2>
+    <h3>{{ n_ratings }}</h3>
+    <h2>The average number of ratings per movie</h2>
+    <h3>{{ ratings_per_movie }}</h3>
+    <h2>The average number of ratings per user</h2>
+    <h3>{{ ratings_per_user }}</h3>
+    <h2>The list of top 10 users with the number of ratings</h2>
+    {% if sorted_number_of_ratings_for_users %}
+        {% for user, rating in sorted_number_of_ratings_for_users %}
+            <h3>Name {{ user.username }}</h3>
+            <h3>Number of Ratings {{ rating }}</h3>
+        {% endfor %}
+    {% else %}
+        <p>None</p>
+    {% endif %}
+    <h2>The total number of parties</h2>
+    <h3>{{ n_parties }}</h3>
 
- 
+    <h2>The average number of users per party</h2>
+    <h3>{{ users_per_party }}</h3>
 
-  <h2>The total number of movies</h2>
-   <h3>{{n_movies}}</h3>
+    <h2>The list of popular users the number of party memberships</h2>
+    {% if sorted_number_of_memberships_in_parties_for_users %}
 
-   <h2>The total number of registered users</h2>
-   <h3>{{n_users}}</h3>
+        {% for user, memberships in sorted_number_of_memberships_in_parties_for_users %}
+            <h3>Name {{ user.username }}</h3>
+            <h4>Number of Memberships {{ memberships }}</h4>
 
-   <h2>The total number of ratings</h2>
-   <h3>{{n_ratings}}</h3>
+        {% endfor %}
+    {% else %}
 
-   <h2>The average number of ratings per movie</h2>
-   <h3>{{ratings_per_movie}}</h3>
-
-   <h2>The average number of ratings per user</h2>
-   <h3>{{ratings_per_user}}</h3>
-
-   <h2>The list of  top 10 users with the most number of ratings</h2>
-   {% if sorted_number_of_ratings_for_users %}
-
-   {% for user, rating in sorted_number_of_ratings_for_users %}
-    <h3>Name {{user.username}}</h3>
-    <h3>Number of Ratings {{rating}}</h3> 
- 
-   {% endfor %}
-   {% else %}
- 
-   <p>None</p>
-   {% endif %}
-
-
-
-   <h2>The total number of parties</h2>
-   <h3>{{n_parties}}</h3>
-
-   <h2>The average number of users per party</h2>
-   <h3>{{users_per_party}}</h3>
-
-
-   <h2>The list of popular users the most number of party memberships</h2>
-   {% if sorted_number_of_memberships_in_parties_for_users %}
-
-  {% for user, memberships in sorted_number_of_memberships_in_parties_for_users %}
-    <h3>Name {{user.username}}</h3>
-  <h4>Number of Memberships {{memberships}}</h4>
-
-  {% endfor %}
-  {% else %}
-
-  <p>None</p>
-  {% endif %}
+        <p>None</p>
+    {% endif %}
 
 {% endblock %}
 

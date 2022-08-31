@@ -1,56 +1,38 @@
 {% extends 'base.html' %}
-
-{% block title %} {{title|capfirst|upper}}  {% endblock %}
-
+{% block title %} {{ title|capfirst|upper }}  {% endblock %}
 {% block content %}
-
-{% comment %} tjis is very bad to use this form rather than django form 
-because you are not validating data , and also you can 
-change html elements from inspect from your browser and input invalid data
-{% endcomment %}
-
-{% comment %} <form action='http://www.google.com/search'  method="GET">
-  <input type='text' name='q' placeholder="your search"/>
-  <input type="submit" value="google search"/>
-  </form> {% endcomment %}
-
-{{my_html|safe}}
-
-<form method='GET' action='/create_party/' enctype='multipart/form-data'>{% csrf_token %}
-  <input  type='submit' class='btn btn-default' value="Create Party" />
-  </form>
-
-  <h2>joined parties</h2>
-  {% if joined %}
-  {% for obj in joined %}
-    <h3>{{obj}}</h3>
-    <a href={% url 'party_detail' id=obj.id %}>Detail </a><br/>
-    <form action="/leave_party/" method="POST"> {% csrf_token %}
-      <input type="hidden" value="{{ obj.id }}" name="id">
-      <input type="submit" value="Leave" >
+    {{ my_html|safe }}
+    <form method='GET' action='/create_party/' enctype='multipart/form-data'>{% csrf_token %}
+        <input type='submit' class='btn btn-default' value="Create Party"/>
     </form>
-  {% endfor %}
-  {% else %}
-  <p>None</p>
-  {% endif %}
+    <h2>joined parties</h2>
+    {% if joined %}
+        {% for obj in joined %}
+            <h3>{{ obj }}</h3>
+            <a href={% url 'party_detail' id=obj.id %}>Detail </a><br/>
+            <form action="/leave_party/" method="POST"> {% csrf_token %}
+                <input type="hidden" value="{{ obj.id }}" name="id">
+                <input type="submit" value="Leave">
+            </form>
+        {% endfor %}
+    {% else %}
+        <p>None</p>
+    {% endif %}
 
-
-
-
-  <h2>Unjoined Parties</h2>
-  {% if unjoined %}
-  {% for obj in unjoined %}
-    <h3> {{ forloop.counter }} - {{obj}}</h3>
-    <a href={% url 'party_detail' id=obj.id %}>Detail </a><br/>
-      {% if obj.n_members <  3 %}
-      <form action="/join_party/" method="POST">{% csrf_token %}
-        <input type="hidden" value={{ obj.id }} name="id">
-      <input type="submit" value="join">
-    </form>
-    {% endif %} 
-  {% endfor %}
-  {% else %}
-  <p>None</p>
-  {% endif %} 
+    <h2>Unjoined Parties</h2>
+    {% if unjoined %}
+        {% for obj in unjoined %}
+            <h3> {{ forloop.counter }} - {{ obj }}</h3>
+            <a href={% url 'party_detail' id=obj.id %}>Detail </a><br/>
+            {% if obj.n_members <  3 %}
+                <form action="/join_party/" method="POST">{% csrf_token %}
+                    <input type="hidden" value={{ obj.id }} name="id">
+                    <input type="submit" value="join">
+                </form>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <p>None</p>
+    {% endif %}
 
 {% endblock %}
